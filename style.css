@@ -8,3 +8,16 @@
 .report-page .report-images figure{margin:0;min-width:0}
 .report-page .report-images img{width:100%;height:110px;object-fit:contain}
 .report-page .report-images figcaption{font-size:11px;overflow-wrap:anywhere}
+/* Version 3: login / sync status */
+#syncChip{font-size:12px;max-width:175px;white-space:normal;line-height:1.25}
+#syncState{font-weight:650}
+@media(max-width:470px){#syncChip{max-width:120px;padding:7px 6px}.brand small{display:none}}
+
+/* Berichtsvorschau an das Word-Layout Version 4 angeglichen. */
+.report-page {font-family: Arial,sans-serif !important;font-size:12pt !important;color:#000 !important;text-align:justify !important;}
+.report-page * {font-family:Arial,sans-serif;color:#000 !important;}
+.report-page h1,.report-page h2,.report-page h3,.report-page h4 {font-size:12pt !important;line-height:1.4;margin-top:20px;margin-bottom:12px;}
+.report-page p,.report-page th,.report-page td {font-size:12pt !important;line-height:1.45;text-align:justify !important;}
+.report-page .report-defect {margin-top:24px;margin-bottom:30px;}
+.report-cover-top {display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.report-cover-logo {max-width:140px;max-height:75px;object-fit:contain;flex-shrink:0;}
