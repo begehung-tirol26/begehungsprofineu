@@ -25,3 +25,16 @@ Die Cloud-Konfiguration ist optional. Ohne Einrichtung bleibt die PWA eine rein 
 - DOCX-Layout: Arial 12 Punkt, Schriftfarbe Schwarz, Blocksatz, vergrößerte Absatzabstände; keine Inhaltsverzeichnis-Seite.
 - Maximal drei Mängelfotos nebeneinander in einer Word-Tabelle. Die bisherigen Funktionen aus Version 3 einschließlich optionaler Cloud-Synchronisierung bleiben erhalten.
 - Ausführliche Anleitung: `UPDATE-VERSION-4-ANLEITUNG.md`.
+
+## Änderungen in Version 5 (Word-Bericht)
+
+- Doppelte Überschrift auf dem Deckblatt entfernt, fett gesetzter Haupttitel bleibt.
+- Zusätzlicher Text „Erstellt am …“ unter der Deckblatttabelle entfernt.
+- Deckblattinhalt mit etwas größerem Abstand zum oberen Seitenrand, weiterhin eine Seite.
+- Firmenname und Berichtsnummer aus der Kopfzeile in die Fußzeile versetzt (mit Seitenzahl rechts).
+- Schwarze Tabellenrahmen und Gitternetzlinien sowie einheitliche feste Spaltenbreiten.
+- Dringlichkeiten in Word-Dokument und Tabellen farblich formatiert: Hoch rot, Mittel orange, Leicht grün.
+- Mängelübersicht mit besser passenden Spaltenüberschriften und ordentlich angeordneten Nummern.
+- Offline-Cache-Version auf `begehungsprofi-v5` aktualisiert.
+
+Die Synchronisierung, lokale Speicherung und Erfassung wurden unverändert aus Version 4 übernommen. Die Aktualisierung ist in `UPDATE-VERSION-5-ANLEITUNG.md` ausführlich erklärt.
