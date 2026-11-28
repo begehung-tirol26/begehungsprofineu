@@ -1,40 +1,47 @@
-# BegehungsProfi Version 3 – Offline-App mit optionaler Cloud-Synchronisierung
+# BegehungsProfi – Version 6 (lokal, mit Kundenverwaltung)
 
-Installierbare, responsive PWA fuer sicherheitstechnische Begehungen, Maengelverwaltung und echte editierbare Word-Berichte.
+Diese Version baut auf BegehungsProfi Version 5 auf. Die bekannte Mängelerfassung, Maßnahmenverfolgung, Nachbegehung, Fotofunktionen, optionale KI-Textoptimierung und DOCX-Erzeugung bleiben erhalten.
 
-**Neu in Version 3:** Freiwillige Synchronisierung zwischen Android und PC ueber private Supabase-Datenbank und privaten Foto-Bucket; Passwort-Anmeldung; Offline-Puffer; Konfliktkopien bei konkurrierenden Aenderungen. `sync.js` enthaelt den Client. `SUPABASE-EINRICHTUNG.sql` enthaelt Schema und Schutzregeln. `INSTALLATION-FUER-ANFAENGER.md` erklaert alle Schritte.
+## Änderungen
 
-Alle Version-2-Funktionen bleiben erhalten: lokale IndexedDB-Speicherung, pro Mangel bis zu drei Fotos, Textfelder und Massnahmen, Dringlichkeit, Fristen, Verlauf von Nachbegehungen, bearbeitbarer Word-Export mit tabellarischer Dokumentation und Foto-Dreierreihe, JSON-Datensicherung, optionale KI-Textoptimierung ueber eigenen Dienst.
+- **Nur lokal:** Keine Supabase-Anbindung, keine Registrierung und keine automatische Synchronisierung. Daten liegen pro Browser/Gerät in IndexedDB. Ausnahme: die ausdrücklich aufgerufene optionale KI-Textüberarbeitung nutzt den selbst eingestellten externen Dienst.
+- **Kundenverwaltung:** Kunden anlegen, bearbeiten, suchen, alphabetisch anzeigen, löschen (nur ohne zugeordnete Begehungen) und Stammangaben für neue Begehungen wiederverwenden. Standorte/Betriebsstätten lassen sich auswählen.
+- **Kundenzuordnung:** Jede neue Begehung erfordert einen Kunden. Ein historischer Snapshot seiner Angaben bleibt in der Begehung, auch wenn spätere Stammdaten geändert werden.
+- **Migration:** Bestehende Version-5-Begehungen aus derselben Browser-Installation werden nicht gelöscht. Beim ersten Start erstellt Version 6 anhand der bisherigen Firmennamen passende Kundeneinträge. Die vorhandenen Begehungstexte und eingebetteten Fotos bleiben erhalten.
+- **Löschen:** Eine einzelne Begehung wird nach zusätzlicher Bestätigung dauerhaft aus der lokalen Datenbank entfernt. Vorher können DOCX und eine lokale Sicherung exportiert werden. Andere Begehungen und Kunden bleiben unberührt.
+- **Speicherübersicht:** Geschätzte JSON-/Fotogrößen pro Begehung und Kunde, Gesamtgröße, Anzahl Fotos. Dies ist eine **Schätzung**, keine exakte Messung der physischen Browserbelegung.
+- **Backups:** Vollsicherung, einzelne Begehung und einzelne Kunden mit Begehungen – jeweils als JSON inklusive Fotos. Der Import schützt vorhandene Datensatz-IDs vor Überschreiben und importiert zusätzliche Datensätze.
+- **Word:** Der bisherige Abschnitt „Zusammenfassung der Mängel“ ist entfernt. Die detaillierte Mängeldokumentation ist nun Kapitel 3. Arial 12, schwarze Tabellenrahmen, Dringlichkeitsfarben und Fotodokumentation bleiben erhalten. Das Inhaltsverzeichnis war bereits in Version 5 entfernt und bleibt entfernt.
 
-## Ohne Cloud nutzbar
+## Datenschutz & Speicher
 
-Die Cloud-Konfiguration ist optional. Ohne Einrichtung bleibt die PWA eine rein lokale Offline-App. Die Synchronisierung kann nicht ohne separate Einrichtung einer Datenbank funktionieren.
+Der JavaScript-Code und die statischen App-Dateien können weiterhin über GitHub Pages veröffentlicht werden; **persönliche Begehungsdaten und Fotos werden dabei nicht automatisch an GitHub übertragen**. Browserdaten verbleiben lokal im jeweiligen Website-Speicher. Bei der ersten Nutzung muss die App-Datei online geladen werden, danach funktioniert die installierte PWA offline. Der browserinterne Speicher kann bei Bereinigung, Deinstallation oder Geräteschaden verloren gehen. Deshalb regelmäßig eine JSON-Sicherung erstellen und sicher separat aufbewahren.
 
-## Sicherheit und Grenzen
+**Keine Handy-PC-Synchronisierung mehr:** Sollen Daten zwischen Geräten übertragen werden, muss eine JSON-Sicherung auf dem Quellgerät erstellt und auf dem Zielgerät bewusst importiert werden. Beide Geräte haben sonst unterschiedliche Datenbestände.
 
-- Die benutzten Supabase-Schluessel sind **oeffentliche Publishable Keys**, keine Service-Role-Secrets. Der Zugriff auf Dokumente ist durch Supabase Auth + RLS geschuetzt. Der private Storage Bucket ist nur fuer den Besitzer zugaenglich. GitHub-Dateien duerfen niemals Secrets enthalten.
-- Kein E2E-Verschluesselungsversprechen, kein vollstaendiger Sicherungs-/Disaster-Recovery-Dienst. Server und Cloudanbieter sind separate Verantwortungsbereiche. Datenschutzrechtliche Pruefung fuer echte Kunden-/Mitarbeiterdaten erforderlich.
-- Dateiformate und SQL muessen auf einem echten Supabase-Projekt und Smartphones getestet werden; ein Live-Dienst wurde nicht mit diesem Paket provisioniert. Es bestehen keine verifizierten realen Logins oder Endgeraete-Tests.
-- Bei parallelen Aenderungen derselben Begehung wird eine separate Konfliktkopie angelegt, keine automatische Zusammenfuehrung. Cloud-Loeschung ist als Markierung umgesetzt, Fotos bleiben moeglicherweise im Cloud-Speicher.
-- Auch im Offline-Modus haengen Daten vom Bestand lokaler Browserdaten ab. Vor Aktualisierungen Sicherung exportieren. Die Aufbewahrung aller Fotos ist von Speicherlimits abhaengig.
+**Frühere Cloud-Daten:** Version 6 deaktiviert die Verbindung, löscht aber nicht automatisch früher eventuell bereits in Supabase gespeicherte Daten. Falls ein Supabase-Projekt bereits genutzt wurde, dort gesondert prüfen und erst nach eigenständiger Sicherung/Datenschutzklärung bereinigen. Die vorherigen lokalen Sync-Konfigurationen und Anmeldetokens werden aus dem Meta-Speicher entfernt.
 
-## Version 4 – Layout und Aktenzeichen
+## Technischer Betrieb
 
-- Akt-Nr. unter **Begehungsdaten** je Begehung frei eingeben. Die Nummer erscheint auf dem Deckblatt sowie in den Allgemeinen Angaben.
-- Optionales Firmenlogo unter **Einstellungen** hochladen; im Word-Deckblatt wird es oben rechts positioniert.
-- DOCX-Layout: Arial 12 Punkt, Schriftfarbe Schwarz, Blocksatz, vergrößerte Absatzabstände; keine Inhaltsverzeichnis-Seite.
-- Maximal drei Mängelfotos nebeneinander in einer Word-Tabelle. Die bisherigen Funktionen aus Version 3 einschließlich optionaler Cloud-Synchronisierung bleiben erhalten.
-- Ausführliche Anleitung: `UPDATE-VERSION-4-ANLEITUNG.md`.
+- Statische HTML-/CSS-/JavaScript-App ohne Pflicht-Abonnements
+- Datenbank `begehungsprofi-db`, schema upgrade **1 → 2** (Stores: `visits`, `meta`, `customers`)
+- Service Worker Cache: `begehungsprofi-v6`
+- Komplett offline nach erstmaliger erfolgreicher Bereitstellung/Caching, optionaler KI-Dienst ausgenommen
+- Echtes editierbares `.docx` ohne externe Bibliotheken
 
-## Änderungen in Version 5 (Word-Bericht)
+## Vor dem Update
 
-- Doppelte Überschrift auf dem Deckblatt entfernt, fett gesetzter Haupttitel bleibt.
-- Zusätzlicher Text „Erstellt am …“ unter der Deckblatttabelle entfernt.
-- Deckblattinhalt mit etwas größerem Abstand zum oberen Seitenrand, weiterhin eine Seite.
-- Firmenname und Berichtsnummer aus der Kopfzeile in die Fußzeile versetzt (mit Seitenzahl rechts).
-- Schwarze Tabellenrahmen und Gitternetzlinien sowie einheitliche feste Spaltenbreiten.
-- Dringlichkeiten in Word-Dokument und Tabellen farblich formatiert: Hoch rot, Mittel orange, Leicht grün.
-- Mängelübersicht mit besser passenden Spaltenüberschriften und ordentlich angeordneten Nummern.
-- Offline-Cache-Version auf `begehungsprofi-v5` aktualisiert.
+1. Unbedingt in Version 5 auf dem **gleichen Android-Browser** eine vollständige Datensicherung erstellen und an sicheren Ort kopieren.
+2. **Nicht** Browserdaten löschen, Website-Speicher entfernen oder App deinstallieren.
+3. Dateien aus dieser ZIP in GitHub-Projekt `begehungsprofineu` aktualisieren (bestehende `index.html`, `app.js`, `style.css`, `sw.js` usw.). `sync.js` und die alte SQL-Datei werden von V6 **nicht** verwendet und sollten nach Bedarf aus dem Repository entfernt werden.
+4. Am Handy alle alten App-Fenster schließen und denselben URL im selben Browser neu laden.
+5. Auf Startseite Version `V6` sowie Kundenverwaltung prüfen. Alte Daten anschließend auf Vollständigkeit prüfen.
+6. Testkunden, Testbegehung, Fotos, Backup, Import und DOCX prüfen, bevor vertrauliche Daten verwendet werden.
 
-Die Synchronisierung, lokale Speicherung und Erfassung wurden unverändert aus Version 4 übernommen. Die Aktualisierung ist in `UPDATE-VERSION-5-ANLEITUNG.md` ausführlich erklärt.
+Siehe `UPDATE-VERSION-6-ANLEITUNG.md` für eine ausführliche Anfängeranleitung.
+
+## Grenzen und Qualitätsstatus
+
+Geprüft: JavaScript-Syntax, simulierte IndexedDB-Migration mit Erhalt eines historischen Fotos und Mängels, Kundenanlage, Begehungsanlage, Speichern von Texten, Schutz gegen sofortiges Löschen und DOCX-Erzeugung einschließlich Layout-Rendering. Der Testbericht enthielt die Kundenfelder und die detaillierte Mängeldokumentation ohne Zusammenfassung.
+
+Nicht vollständig geprüft: reale Android-Browser-/PWA-Aktualisierung, physische Speicherfreigabe des Geräts, 50/100-Mängel-Belastung, Rückimport umfangreicher Originalfotos, alle Kantenfälle des Migrations- und Löschen-Dialogs sowie Word unter Microsoft Office. Ein vollständig automatisierter Browser-End-to-End-Test war in der Testumgebung nicht möglich. Bitte zunächst mit Testdaten prüfen.
